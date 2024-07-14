@@ -59,14 +59,22 @@ extension PositionExtensions on Position {
   int manhattanDistance(Position other) => (x - other.x).abs() + (y - other.y).abs();
 
   Iterable<Position> neighbors() sync* {
-    yield Position(x-1, y-1);
-    yield Position(x+0, y-1);
-    yield Position(x+1, y-1);
-    yield Position(x-1, y);
-    yield Position(x+1, y);
-    yield Position(x-1, y+1);
-    yield Position(x+0, y+1);
-    yield Position(x+1, y+1);
+    yield* orthogonalNeighbors();
+    yield* diagonalNeighbors();
+  }
+
+  Iterable<Position> orthogonalNeighbors() sync* {
+    yield this + Vector.North;
+    yield this + Vector.East;
+    yield this + Vector.West;
+    yield this + Vector.South;
+  }
+
+  Iterable<Position> diagonalNeighbors() sync* {
+    yield this + Vector.North + Vector.East;
+    yield this + Vector.North + Vector.West;
+    yield this + Vector.South + Vector.East;
+    yield this + Vector.South + Vector.West;
   }
 }
 
