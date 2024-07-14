@@ -46,12 +46,12 @@ int do1(List<Poly> polies) {
 }
 
 Poly combine(Poly p1, Poly p2) {
-  final k2 = p2.first - p1.first;
-  for(final i in Iterable.generate(p1.magnitude * p2.magnitude, (i)=>i)) {
-    if ((p2.magnitude * i + k2) % p1.magnitude == 0) {
-      final n1 = (p2.magnitude * i + k2) ~/ p1.magnitude;
-      print('$i, ${p1.magnitude}, ${p2.magnitude}');
-      return Poly(p1.magnitude * p2.magnitude, p1.magnitude * n1 + p1.first);
+  final k2 = p1.first - p2.first;
+  for(final i in Iterable.generate(p2.magnitude, (i)=>i)) {
+    if ((p1.magnitude * i + k2) % p2.magnitude == 0) {
+      final n1 = (p1.magnitude * i + k2) ~/ p2.magnitude;
+      // print('$i, ${p1.magnitude}, ${p2.magnitude}');
+      return Poly(p1.magnitude * p2.magnitude, p2.magnitude * n1 + p2.first);
     }
   }
   throw Exception();
