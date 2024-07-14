@@ -1,0 +1,10 @@
+name: AdventOfCode2015.dart
+
+environment:
+  sdk: '^3.4.0'
+dependencies:
+  collection: ^1.19.0
+  crypto: ^3.0.3
+  petitparser: ^6.0.2
+dev_dependencies:
+  lints: ^4.0.0
