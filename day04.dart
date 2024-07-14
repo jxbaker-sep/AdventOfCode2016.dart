@@ -21,7 +21,7 @@ class Room {
 
 final nameMatcher = (
   (my.word &
-  string("-").flatten()).plus()
+  string("-")).plus()
 ).map((m) => m.flattened.join().chomp('-'));
 
 final matcher = (
@@ -58,7 +58,7 @@ bool isRealRoom(Room room) {
     .groupFoldBy((c) => c, (int? p, c) => (p ?? 0) + 1)
     .entries.toList();
   temp.sort((e1, e2) => e2.value == e1.value 
-    ? e1.key.runes.first - e2.key.runes.first 
+    ? e1.key.compareTo(e2.key)
     :  e2.value - e1.value);
   final checksum = temp.map((t) => t.key).take(5).join();
   return checksum == room.checksum;
