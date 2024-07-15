@@ -26,7 +26,7 @@ class Position {
   Position operator+(Vector other) => Position(x + other.x, y + other.y);
 
   // ignore: non_constant_identifier_names
-  static final Position Zero = Position(0, -1);
+  static final Position Zero = Position(0, 0);
 }
 
 class Vector {
