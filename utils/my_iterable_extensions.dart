@@ -19,4 +19,21 @@ extension MyIterableExtensions<T> on Iterable<T> {
     }
     return result;
   }
+
+  Iterable<List<T>> windows(int length) sync* {
+    if (length < 1) throw Exception();
+    List<T> accum = [];
+    for(final item in this) {
+      if (accum.length == length - 1) {
+        accum.add(item);
+        yield accum;
+      }
+      else if (accum.length == length) {
+        accum = accum.skip(1).followedBy([item]).toList();
+        yield accum;
+      } else {
+        accum.add(item);
+      }
+    }
+  }
 }
