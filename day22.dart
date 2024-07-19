@@ -72,12 +72,12 @@ GridNode parse1(String line) {
 List<GridNode> parse(String s) => s.lines().map((it) => parse1(it)).toList();
 
 Future<void> main() async {
-  final data = parse(await getInput('day21'));
-  final sample = parse(await getInput('day21.sample'));
+  final data = parse(await getInput('day22'));
+  final sample = parse(await getInput('day22.sample'));
   test(do1(data), 993);
 
   test(do2(sample), 7);
-  // test(do2(data), 0);
+  test(do2(data), 0);
 
 }
 
@@ -95,15 +95,21 @@ int do1(List<GridNode> nodes) {
   return viablePairs;
 }
 
-typedef SearchNode = ({Position dataLocation, Grid grid, int steps});
+typedef SearchNode = ({Position dataLocation, Grid grid, int steps, int minRemainingSteps});
+
+int minRemainingSteps(Position dataLocation, Grid grid) {
+  return grid.nodes.values.where((n) => n.p != dataLocation && n.avail >= grid.at(dataLocation).used)
+    .map((n) => n.p.manhattanDistance(dataLocation) + dataLocation.manhattanDistance(Position.Zero))
+    .min;
+}
 
 int do2(List<GridNode> start_) {
   final goal = Position.Zero;
-  final open = PriorityQueue<SearchNode>((a,b) => (a.steps + a.dataLocation.manhattanDistance(goal)) - (b.steps + b.dataLocation.manhattanDistance(goal)));
+  final open = PriorityQueue<SearchNode>((a,b) => (a.steps + a.minRemainingSteps) - (b.steps + b.minRemainingSteps));
   final startGrid = Grid(start_);
   final startLocation = Position(startGrid.columns  -1, 0);
   final closed = {startGrid};
-  open.add((dataLocation: startLocation, grid: startGrid, steps: 0));
+  open.add((dataLocation: startLocation, grid: startGrid, steps: 0, minRemainingSteps: minRemainingSteps(startLocation, startGrid)));
   while (open.isNotEmpty) {
     final current = open.removeFirst();
     for(final neighbor in neighbors(current)) {
@@ -127,7 +133,8 @@ Iterable<SearchNode> neighbors(SearchNode node) sync* {
       tempGrid[sourcePoint] = sourceNode.addData(-sourceNode.used);
       tempGrid[destinationPoint] = destinationNode.addData(sourceNode.used);
       final current = sourceNode.p == node.dataLocation ? destinationNode.p : node.dataLocation;
-      yield (dataLocation: current, grid: Grid(tempGrid.values), steps: node.steps + 1);
+      final grid = Grid(tempGrid.values);
+      yield (dataLocation: current, grid: grid, steps: node.steps + 1, minRemainingSteps: minRemainingSteps(current, grid));
     }
   }
 }

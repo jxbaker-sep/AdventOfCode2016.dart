@@ -5,8 +5,26 @@ extension MyIterableExtensions<T> on Iterable<T> {
     return isEmpty ? 0 : map(callback).reduce((a,b)=>a+b);
   }
 
-  int maxBy(int Function(T t) callback) => map(callback).max;
-  int minBy(int Function(T t) callback) => map(callback).min;
+  // int maxBy(int Function(T t) callback) => map(callback).max;
+  T minBy(int Function(T t) callback) {
+    var first = true;
+    T? found;
+    int value = 0;
+    for(final f in this) {
+      if (first) {
+        found = f;
+        value = callback(f);
+        first = false;
+      } else {
+        final temp = callback(f);
+        if (temp < value) {
+          found = f;
+          value = temp;
+        }
+      }
+    }
+    return found ?? (throw Exception());
+  }
 
   Iterable<T2> flatmap<T2>(Iterable<T2> Function(T t) callback) {
     return map(callback).expand((i)=>i);
