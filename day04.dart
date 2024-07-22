@@ -36,15 +36,15 @@ final matcher = (
 List<Room> parse(String s) => s.lines().map((it) => matcher.allMatches(it).first).toList();
 
 Future<void> main() async {
-  test(isRealRoom(parse('aaaaa-bbb-z-y-x-123[abxyz]')[0]), true);
-  test(isRealRoom(parse('a-b-c-d-e-f-g-h-987[abcde]')[0]), true);
-  test(isRealRoom(parse('not-a-real-room-404[oarel]')[0]), true);
-  test(isRealRoom(parse('totally-real-room-200[decoy]')[0]), false);
+  myTest(isRealRoom(parse('aaaaa-bbb-z-y-x-123[abxyz]')[0]), true);
+  myTest(isRealRoom(parse('a-b-c-d-e-f-g-h-987[abcde]')[0]), true);
+  myTest(isRealRoom(parse('not-a-real-room-404[oarel]')[0]), true);
+  myTest(isRealRoom(parse('totally-real-room-200[decoy]')[0]), false);
 
   final data = parse(await getInput('day04'));
-  test(data.where(isRealRoom).sumBy((it) => it.sectorId), 173787);
+  myTest(data.where(isRealRoom).sumBy((it) => it.sectorId), 173787);
 
-  test(data.where(isRealRoom)
+  myTest(data.where(isRealRoom)
     .firstWhere((room) => decypher(room) == 'northpole object storage')
     .sectorId,
     548);

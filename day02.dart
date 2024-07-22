@@ -19,11 +19,11 @@ Future<void> main() async {
   final sample = parse(await getInput('day02.sample'));
   final data = parse(await getInput('day02'));
 
-  test(do1(sample), 1985);
-  test(do1(data), 12578);
+  myTest(do1(sample), 1985);
+  myTest(do1(data), 12578);
 
-  test(do2(sample), '5DB3');
-  test(do2(data), '516DD');
+  myTest(do2(sample), '5DB3');
+  myTest(do2(data), '516DD');
 
 }
 

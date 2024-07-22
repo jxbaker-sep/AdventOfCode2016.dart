@@ -45,10 +45,10 @@ Future<void> main() async {
   // sw.start();
   final sample = parse(await getInput('day15.sample'));
   final data = parse(await getInput('day15'));
-  test(do1(sample), 5);
-  test(do1([Poly(2,1), Poly(3,2), Poly(5,3)]), 23);
-  test(do1(data), 121834);
-  test(do1(data + [Poly(11, 11 - (data.length + 1))]), 3208099);
+  myTest(do1(sample), 5);
+  myTest(do1([Poly(2,1), Poly(3,2), Poly(5,3)]), 23);
+  myTest(do1(data), 121834);
+  myTest(do1(data + [Poly(11, 11 - (data.length + 1))]), 3208099);
   // print(sw.elapsedMilliseconds);
 }
 

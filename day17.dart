@@ -10,13 +10,13 @@ import 'utils/test.dart';
 
 Future<void> main() async {
   var data = (await getInput('day17')).lines().first;
-  test(do1(data).first, 'DDRRUDLRRD');
+  myTest(do1(data).first, 'DDRRUDLRRD');
 
-  test(do1('ihgpwlah').last.length, 370);
-  test(do1('kglvqrro').last.length, 492);
-  test(do1('ulqzkmiv').last.length, 830);
-  test(do1('ulqzkmiv').last.length, 830);
-  test(do1(data).last.length, 488);
+  myTest(do1('ihgpwlah').last.length, 370);
+  myTest(do1('kglvqrro').last.length, 492);
+  myTest(do1('ulqzkmiv').last.length, 830);
+  myTest(do1('ulqzkmiv').last.length, 830);
+  myTest(do1(data).last.length, 488);
 }
 
 typedef Step = ({Position p, String path});

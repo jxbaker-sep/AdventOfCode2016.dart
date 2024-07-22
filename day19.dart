@@ -5,8 +5,8 @@ import 'utils/test.dart';
 
 Future<void> main() async {
   var data = int.parse(await getInput('day19'));
-  test(do1(5), 3);
-  test(do1(data), 1834471);
+  myTest(do1(5), 3);
+  myTest(do1(data), 1834471);
 
   // test(do2(2), 1);
   // test(do2(3), 3);
@@ -19,15 +19,15 @@ Future<void> main() async {
   // test(do2(11), 2);
   // test(do2(25), 23);
 
-  test(do2(50), 23);
-  test(do2(100), 19);
+  myTest(do2(50), 23);
+  myTest(do2(100), 19);
 
   // for(final i in xrange(75)) {
   //   print('${i+2}: ${do2(i+2)}');
   // }
 
 
-  test(do2(data), 1420064); // 611507 too low, 240148 too low
+  myTest(do2(data), 1420064); // 611507 too low, 240148 too low
 
 }
 

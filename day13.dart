@@ -24,9 +24,9 @@ bool isWall(int x, int y, int favnum) {
 
 Future<void> main() async {
   final data = int.parse(await getInput('day13'));
-  test(do1(10, Position(7, 4)), 11);
-  test(do1(data, Position(31, 39)), 82);
-  test(do2(data, 50), 138); // 239 too high
+  myTest(do1(10, Position(7, 4)), 11);
+  myTest(do1(data, Position(31, 39)), 82);
+  myTest(do2(data, 50), 138); // 239 too high
 }
 
 typedef Step = ({Position head, List<Position> steps});

@@ -24,8 +24,8 @@ List<Triplet> parse(String s) {
 Future<void> main() async {
   final data = parse(await getInput('day03'));
 
-  test(data.where(isValid).length, 982);
-  test(invert(data).where(isValid).length, 1826);
+  myTest(data.where(isValid).length, 982);
+  myTest(invert(data).where(isValid).length, 1826);
 }
 
 Iterable<Triplet> invert(List<Triplet> data) sync* {

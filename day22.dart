@@ -75,7 +75,7 @@ List<GridNode> parse(String s) => s.lines().map((it) => parse1(it)).toList();
 Future<void> main() async {
   final data = parse(await getInput('day22'));
   // final sample = parse(await getInput('day22.sample'));
-  test(do1(data), 993);
+  myTest(do1(data), 993);
 
   // Note: part 2 was done by hand. I could make an algorithm for it now that
   // I understand the limited shape of the data, but why bother?

@@ -9,9 +9,9 @@ import 'utils/test.dart';
 Future<void> main() async {
   final data = (await getInput('day18')).lines().first;
   
-  test(do1('.^^.^.^^^^', 10), 38);
-  test(do1(data, 40), 1963);
-  test(do1(data, 400000), 20009568);
+  myTest(do1('.^^.^.^^^^', 10), 38);
+  myTest(do1(data, 40), 1963);
+  myTest(do1(data, 400000), 20009568);
 }
 
 enum Space {

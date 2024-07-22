@@ -26,13 +26,13 @@ List<Instruction> parse(String s) => s.lines()[0].split(',').map((it)=>it.trim()
 Future<void> main() async {
   final data = parse(await getInput('day01'));
 
-  test(do1(parse('R2, L3')), 5);
-  test(do1(parse('R2, R2, R2')), 2);
-  test(do1(parse('R5, L5, R5, R3')), 12);
-  test(do1(data), 161);
+  myTest(do1(parse('R2, L3')), 5);
+  myTest(do1(parse('R2, R2, R2')), 2);
+  myTest(do1(parse('R5, L5, R5, R3')), 12);
+  myTest(do1(data), 161);
 
-  test(do2(parse('R8, R4, R4, R8')), 4);
-  test(do2(data), 0);
+  myTest(do2(parse('R8, R4, R4, R8')), 4);
+  myTest(do2(data), 0);
 
 }
 

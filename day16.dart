@@ -3,9 +3,9 @@ import 'utils/my_string_extensions.dart';
 import 'utils/test.dart';
 
 Future<void> main() async {
-  test(do1(20, '10000'), '01100');
-  test(do1(272, (await getInput('day16')).lines().first), '01110011101111011');
-  test(do1(35651584, (await getInput('day16')).lines().first), '11001111011000111');
+  myTest(do1(20, '10000'), '01100');
+  myTest(do1(272, (await getInput('day16')).lines().first), '01110011101111011');
+  myTest(do1(35651584, (await getInput('day16')).lines().first), '11001111011000111');
 }
 
 String do1(int length, String stateAsString) {

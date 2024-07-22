@@ -18,8 +18,8 @@ List<Range> parse(String s) => s.lines().map((l) {
 Future<void> main() async {
   final data = parse(await getInput('day20'));
 
-  test(do1(data), 17348574);
-  test(do2(data), 104);
+  myTest(do1(data), 17348574);
+  myTest(do2(data), 104);
 }
 
 bool isInRange(int value, Range r) => r.start <= value && value <= r.stop;
