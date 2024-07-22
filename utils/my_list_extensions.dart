@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:collection/collection.dart';
 
 extension MyListExtensions<T> on List<T> {

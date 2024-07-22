@@ -1,5 +1,3 @@
-import 'package:collection/collection.dart';
-
 extension MyIterableExtensions<T> on Iterable<T> {
   int sumBy(int Function(T t) callback) {
     return isEmpty ? 0 : map(callback).reduce((a,b)=>a+b);
