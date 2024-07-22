@@ -17,6 +17,7 @@ class GridNode {
     : _repr = '${p.x},${p.y},$size,$used,$avail';
 
   GridNode addData(int amount) {
+    if (amount + used > size) throw Exception();
     return GridNode(p, size, used + amount, avail - amount);
   }
 
@@ -73,11 +74,15 @@ List<GridNode> parse(String s) => s.lines().map((it) => parse1(it)).toList();
 
 Future<void> main() async {
   final data = parse(await getInput('day22'));
-  final sample = parse(await getInput('day22.sample'));
+  // final sample = parse(await getInput('day22.sample'));
   test(do1(data), 993);
 
-  test(do2(sample), 7);
-  test(do2(data), 0);
+  // Note: part 2 was done by hand. I could make an algorithm for it now that
+  // I understand the limited shape of the data, but why bother?
+  // print("sample");
+  // test(do2(sample), 7);
+  // print("data");
+  // test(do2(data), 202);
 
 }
 
@@ -95,26 +100,37 @@ int do1(List<GridNode> nodes) {
   return viablePairs;
 }
 
-typedef SearchNode = ({Position dataLocation, Grid grid, int steps, int minRemainingSteps});
+typedef SearchNode = ({Position dataLocation, Grid grid, List<Position> shoveList, List<Position> cursorTail, int steps});
 
-int minRemainingSteps(Position dataLocation, Grid grid) {
-  return grid.nodes.values.where((n) => n.p != dataLocation && n.avail >= grid.at(dataLocation).used)
-    .map((n) => n.p.manhattanDistance(dataLocation) + dataLocation.manhattanDistance(Position.Zero))
-    .min;
+extension on SearchNode {
+  int get priority => steps + (shoveList.firstOrNull ?? dataLocation).manhattanDistance();
 }
+
+int priorityFunction(SearchNode a, SearchNode b) => a.priority - b.priority;
 
 int do2(List<GridNode> start_) {
   final goal = Position.Zero;
-  final open = PriorityQueue<SearchNode>((a,b) => (a.steps + a.minRemainingSteps) - (b.steps + b.minRemainingSteps));
+  final open = PriorityQueue<SearchNode>(priorityFunction);
   final startGrid = Grid(start_);
   final startLocation = Position(startGrid.columns  -1, 0);
-  final closed = {startGrid};
-  open.add((dataLocation: startLocation, grid: startGrid, steps: 0, minRemainingSteps: minRemainingSteps(startLocation, startGrid)));
+  final closed = {startLocation: 0};
+  open.add((dataLocation: startLocation, grid: startGrid, shoveList: [], cursorTail: [], steps: 0));
+  print(startLocation);
+  print(start_.where((it) => it.used == 0).toList());
   while (open.isNotEmpty) {
     final current = open.removeFirst();
+
+    final already2 = closed[current.shoveList.firstOrNull ?? current.dataLocation];
+    if (already2 is int && already2 < current.steps) continue;
+
+
     for(final neighbor in neighbors(current)) {
       if (neighbor.dataLocation == goal) return neighbor.steps;
-      if (!closed.add(neighbor.grid)) continue;
+      final already = closed[neighbor.shoveList.firstOrNull ?? neighbor.dataLocation];
+      if (already is int && already < neighbor.steps) continue;
+      if (neighbor.shoveList.isEmpty) {
+        closed[neighbor.dataLocation] = neighbor.steps;
+      }
       open.add(neighbor);
     }
   }
@@ -122,19 +138,62 @@ int do2(List<GridNode> start_) {
 }
 
 Iterable<SearchNode> neighbors(SearchNode node) sync* {
-  for(final sourcePoint in node.grid.nodes.keys) {
-    for (final destinationPoint in sourcePoint.orthogonalNeighbors()) {
-      if (!node.grid.contains(destinationPoint)) continue;
-      final sourceNode = node.grid.at(sourcePoint);
-      final destinationNode = node.grid.at(destinationPoint);
-      if (destinationNode.avail < sourceNode.used) continue;
-      
-      final tempGrid = node.grid.nodes.values.toMap((it) => it.p, (it)=>it);
-      tempGrid[sourcePoint] = sourceNode.addData(-sourceNode.used);
-      tempGrid[destinationPoint] = destinationNode.addData(sourceNode.used);
-      final current = sourceNode.p == node.dataLocation ? destinationNode.p : node.dataLocation;
-      final grid = Grid(tempGrid.values);
-      yield (dataLocation: current, grid: grid, steps: node.steps + 1, minRemainingSteps: minRemainingSteps(current, grid));
+  if (node.shoveList.isEmpty) {
+    for(final neighbor in node.dataLocation.orthogonalNeighbors()
+      .where((neighbor) => node.grid.contains(neighbor))
+      .where((neighbor) => !node.cursorTail.contains(neighbor))
+    ) {
+      final nn = node.grid.nodes[neighbor]!;
+      final cursor = node.grid.nodes[node.dataLocation]!;
+      if (nn.size < cursor.used) continue;
+
+      if (nn.avail >= cursor.used) {
+        // print('moving cursor to $neighbor');
+        yield (dataLocation: neighbor, grid: move(node.grid, [node.dataLocation, neighbor]), shoveList: [], cursorTail: node.cursorTail + [node.dataLocation], steps: node.steps + 1);
+      }
+      if (nn.used > 0) {
+        // print('shoving from cursor into $neighbor');
+        yield (dataLocation: node.dataLocation, grid: node.grid, shoveList: [neighbor], cursorTail: node.cursorTail, steps: node.steps + 2);
+      }
+    }
+    return;
+  }
+
+  for(final neighbor in node.shoveList.last.orthogonalNeighbors()
+    .where((neighbor) => node.grid.contains(neighbor))
+    .where((neighbor) => node.dataLocation != neighbor)
+    .where((neighbor) => !node.shoveList.contains(neighbor))) {
+    final shovingTo = node.grid.nodes[neighbor]!;
+    final shovingFrom = node.grid.nodes[node.shoveList.last]!;
+
+    if (shovingTo.size < shovingFrom.used) continue;
+
+    if (shovingTo.avail >= shovingFrom.used) {
+      // print('moving $shovingFrom to $shovingTo');
+      yield (dataLocation: node.shoveList.first, 
+        grid: move(node.grid, [node.dataLocation] + node.shoveList + [neighbor]), 
+        shoveList: [], 
+        cursorTail: node.cursorTail + [node.dataLocation], 
+        steps: node.steps
+      );
+    } 
+    if (shovingTo.used > 0) {
+      // print('shoving $shovingFrom to $shovingTo');
+      yield (dataLocation: node.dataLocation, grid: node.grid, shoveList: node.shoveList + [shovingTo.p], cursorTail: node.cursorTail, steps: node.steps + 1);
     }
   }
+}
+
+Grid move(Grid original, List<Position> sourceToDestination) {
+  final nodes = original.nodes.values.toMap((it) => it.p, (it) => it);
+  for(var i = sourceToDestination.length - 2; i >= 0; i--) {
+    final source = sourceToDestination[i];
+    final destination = sourceToDestination[i+1];
+    final originalSource = nodes[source]!;
+    final originalDestination = nodes[destination]!;
+    nodes[source] = originalSource.addData(-originalSource.used);
+    nodes[destination] = originalDestination.addData(originalSource.used);
+  }
+
+  return Grid(nodes.values);
 }

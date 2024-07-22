@@ -3,7 +3,7 @@ class Position {
   final int x;
   final int y;
 
-  Position(this.x, this.y);
+  const Position(this.x, this.y);
 
   @override
   bool operator==(Object other) =>
@@ -25,8 +25,11 @@ class Position {
 
   Position operator+(Vector other) => Position(x + other.x, y + other.y);
 
-  // ignore: non_constant_identifier_names
-  static final Position Zero = Position(0, 0);
+  // ignore: constant_identifier_names
+  static const Position Zero = Position(0, 0);
+
+  @override
+  String toString() => 'Position($x, $y)';
 }
 
 class Vector {
@@ -56,7 +59,7 @@ class Vector {
 
 
 extension PositionExtensions on Position {
-  int manhattanDistance(Position other) => (x - other.x).abs() + (y - other.y).abs();
+  int manhattanDistance([Position other = Position.Zero]) => (x - other.x).abs() + (y - other.y).abs();
 
   Iterable<Position> neighbors() sync* {
     yield* orthogonalNeighbors();
