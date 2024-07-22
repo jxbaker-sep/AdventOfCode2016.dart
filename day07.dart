@@ -8,16 +8,21 @@ import 'utils/my_iterable_extensions.dart';
 import 'utils/my_string_extensions.dart';
 import 'utils/parse_utils.dart';
 
-typedef Subnet = ({bool isHypernet, String address});
+class Subnet {
+  final bool isHypernet;
+  final String address;
+
+  Subnet(this.isHypernet, this.address);
+}
+
 typedef Ipv7 = List<Subnet>;
 
-final Parser<Ipv7>  tlsMatcher = ((plain & hypernet).star() & plain.optional())
-  .map((m) => (m[0] as List<List<dynamic>>).flattenedToList.whereType<Subnet>().toList() + (m[1] == null ? [] : [m[1] as Subnet]));
+final tlsMatcher = seq2(seq2(plain, hypernet).star(), plain.optional()).map((m) => m.$1.flatmap((it) => [it.$1, it.$2]).followedBy(m.$2 != null ? [m.$2!] : []).toList());
 
-final plain = lexical.map((m) => (isHypernet: false, address: m));
+final plain = lexical.map((m) => Subnet(false, m));
 
-final hypernet = (string("[") & lexical & string("]"))
-  .map((m) => (isHypernet: true, address: m[1] as String));
+final hypernet = seq3(string("["), lexical, string("]"))
+  .map((m) => Subnet(true, m.$2));
 
 List<Ipv7> parse(String s) => s.lines().map((line) => tlsMatcher.allMatches(line).first).toList();
 
@@ -43,7 +48,7 @@ bool supportsSSL(Ipv7 element) => element
   .where((segment) => !segment.isHypernet)
   .flatmap((segment) => abas(segment.address))
   .any((aba) => element.any((segment) => segment.isHypernet && 
-    abas(segment.address).any((other) => other.a == aba.b && other.b == aba.a)));
+    abas(segment.address).any((bab) => bab.a == aba.b && bab.b == aba.a)));
 
 int do1(List<Ipv7> list) => list.where(supportsTls).length;
 
