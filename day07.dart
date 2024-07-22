@@ -35,16 +35,15 @@ Future<void> main() async {
 
 int do2(List<Ipv7> list) => list.where(supportsSSL).length;
 
-Iterable<List<int>> abas(String data) => 
-  data.codeUnits.windows(3).where((window) => window[0] == window[2] && window[0] != window[1]);
-
-bool containsBAB(String data, List<int> aba) =>
-  data.codeUnits.windows(3).any((window) => window[0] == aba[1] && window[1] == aba[0] && window[2] == aba[1]);
+Iterable<({int a, int b})> abas(String data) => 
+  data.codeUnits.windows(3).where((window) => window[0] == window[2] && window[0] != window[1])
+  .map((window) => (a: window[0], b: window[1]));
 
 bool supportsSSL(Ipv7 element) => element
   .where((segment) => !segment.isHypernet)
   .flatmap((segment) => abas(segment.address))
-  .any((aba) => element.any((segment) => segment.isHypernet && containsBAB(segment.address, aba)));
+  .any((aba) => element.any((segment) => segment.isHypernet && 
+    abas(segment.address).any((other) => other.a == aba.b && other.b == aba.a)));
 
 int do1(List<Ipv7> list) => list.where(supportsTls).length;
 
