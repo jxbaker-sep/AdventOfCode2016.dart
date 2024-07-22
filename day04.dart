@@ -3,7 +3,6 @@ import 'package:petitparser/petitparser.dart';
 
 import 'utils/input.dart';
 import 'utils/my_iterable_extensions.dart';
-import 'utils/my_list_extensions.dart';
 import 'utils/my_string_extensions.dart';
 import 'utils/parse_utils.dart' as my;
 import 'utils/test.dart';
@@ -21,14 +20,14 @@ class Room {
 }
 
 final nameMatcher = (
-  (my.word &
+  (my.lexical &
   string("-")).plus()
 ).map((m) => m.flattened.join().chomp('-'));
 
 final matcher = (
   nameMatcher &
   my.number &
-  my.word.skip(before: string("["), after: string("]"))
+  my.lexical.skip(before: string("["), after: string("]"))
   ).map((m) {
     return Room(m[0] as String, m[1] as int, m[2] as String);
   });
