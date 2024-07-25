@@ -1,10 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:petitparser/petitparser.dart';
+import 'package:test/test.dart';
 
 import 'utils/input.dart';
-import 'utils/my_iterable_extensions.dart';
-import 'utils/my_string_extensions.dart';
-import 'utils/parse_utils.dart' as my;
+import 'utils/iterable_extensions.dart';
+import 'utils/string_extensions.dart';
+import 'utils/parse_utils.dart';
 import 'utils/test.dart';
 
 
@@ -20,14 +21,14 @@ class Room {
 }
 
 final nameMatcher = (
-  (my.lexical &
+  (lexical &
   string("-")).plus()
 ).map((m) => m.flattened.join().chomp('-'));
 
 final matcher = (
   nameMatcher &
-  my.number &
-  my.lexical.skip(before: string("["), after: string("]"))
+  number &
+  lexical.between('[', ']')
   ).map((m) {
     return Room(m[0] as String, m[1] as int, m[2] as String);
   });
@@ -41,7 +42,7 @@ Future<void> main() async {
   myTest(isRealRoom(parse('totally-real-room-200[decoy]')[0]), false);
 
   final data = parse(await getInput('day04'));
-  myTest(data.where(isRealRoom).sumBy((it) => it.sectorId), 173787);
+  myTest(data.where(isRealRoom).map((it) => it.sectorId).sum, 173787);
 
   myTest(data.where(isRealRoom)
     .firstWhere((room) => decypher(room) == 'northpole object storage')

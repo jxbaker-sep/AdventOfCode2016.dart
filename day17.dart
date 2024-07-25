@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:crypto/crypto.dart';
 
 import 'utils/input.dart';
-import 'utils/my_string_extensions.dart';
+import 'utils/string_extensions.dart';
 import 'utils/position.dart';
 import 'utils/test.dart';
 

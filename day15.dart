@@ -1,8 +1,8 @@
 import 'package:petitparser/petitparser.dart';
 
 import 'utils/input.dart';
-import 'utils/my_string_extensions.dart';
-import 'utils/parse_utils.dart' as my;
+import 'utils/string_extensions.dart';
+import 'utils/parse_utils.dart';
 import 'utils/test.dart';
 
 class Poly {
@@ -24,9 +24,9 @@ class Poly {
 }
 
 final matcher = (
-  my.number.skip(before: string("Disc #"), after: string("has")) &
-  my.number.skip(after: string("positions; at time=0, it is at position")) &
-  my.number.skip(after: string("."))
+  number.between("Disc #", "has") &
+  number.after("positions; at time=0, it is at position") &
+  number.after('.')
   ).map((m) {
     final mag = m[1] as int;
     final d = m[0] as int;

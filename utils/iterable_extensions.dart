@@ -1,12 +1,8 @@
 import 'package:collection/collection.dart';
 
 extension MyIterableExtensions<T> on Iterable<T> {
-  int sumBy(int Function(T t) callback) {
-    return isEmpty ? 0 : map(callback).reduce((a,b)=>a+b);
-  }
-
   // int maxBy(int Function(T t) callback) => map(callback).max;
-  T minBy(int Function(T t) callback) {
+  T findByMin(int Function(T t) callback) {
     var first = true;
     T? found;
     int value = 0;
@@ -54,4 +50,8 @@ extension MyIterableExtensions<T> on Iterable<T> {
       }
     }
   }
+}
+
+extension MyIterableNumericExtension on Iterable<int> {
+  int get product => reduce((a,b) => a*b);
 }

@@ -2,8 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:test/test.dart';
 
 import 'utils/input.dart';
-import 'utils/my_string_extensions.dart';
-import 'utils/my_list_extensions.dart';
+import 'utils/string_extensions.dart';
+import 'utils/list_extensions.dart';
 
 
 List<String> parse(String s) => s.lines();

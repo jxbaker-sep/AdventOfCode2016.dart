@@ -4,8 +4,8 @@ import 'package:petitparser/petitparser.dart';
 import 'package:test/test.dart';
 
 import 'utils/input.dart';
-import 'utils/my_iterable_extensions.dart';
-import 'utils/my_string_extensions.dart';
+import 'utils/iterable_extensions.dart';
+import 'utils/string_extensions.dart';
 import 'utils/parse_utils.dart';
 
 class Subnet {

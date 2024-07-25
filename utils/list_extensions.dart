@@ -15,6 +15,14 @@ extension MyListExtensions<T> on List<T> {
       }
     }
   }
+
+  Iterable<(T, T)> pairs() sync* {
+    for (final (index, item1) in indexed) {
+      for (final item2 in skip(index+1)) {
+        yield (item1, item2);
+      }
+    }
+  }
 }
 
 extension MyListListExtensions<T> on List<List<T>> {

@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:petitparser/petitparser.dart';
 
 import 'utils/input.dart';
-import 'utils/my_string_extensions.dart';
+import 'utils/string_extensions.dart';
 import 'utils/parse_utils.dart' as my;
 import 'utils/test.dart';
 
