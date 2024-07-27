@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:petitparser/petitparser.dart';
 import 'package:test/test.dart';
 
-import 'day22.dart';
 import 'utils/input.dart';
 import 'utils/list_extensions.dart';
 import 'utils/parse_utils.dart';
@@ -57,17 +56,13 @@ int do1(Floors startFloors) {
 
   while (open.isNotEmpty) {
     final current = open.removeFirst();
-    for (final neighbor in neighbors(current).where((n) => n.floors.isLegal)) {
+    for (final neighbor in neighbors(current)) {
       if (neighbor.floors[3].length == totalItems) return neighbor.steps;
       if (!closed.add(neighbor.uniqueKey)) continue;
       open.add(neighbor);
     }
   }
   throw Exception();
-}
-
-extension on Floors {
-  bool get isLegal => every((floor) => floor.isLegal);
 }
 
 extension on List<LabeledType> {
@@ -84,19 +79,19 @@ Iterable<SearchItem> neighbors(SearchItem current) sync* {
     final nextFloor = current.elevator + i;
     if (nextFloor < 0 || nextFloor >= current.floors.length) continue;
     final items = current.floors[current.elevator];
-    for(final item in items) {
-      final clone = current.floors.clone();
-      clone[current.elevator].remove(item);
-      clone[nextFloor].add(item);
-      yield (elevator: nextFloor, floors: clone, steps: current.steps + 1);
-    }
+      for(final item in items) {
+        final clone = current.floors.clone();
+        clone[current.elevator].remove(item);
+        clone[nextFloor].add(item);
+        if (clone[nextFloor].isLegal && clone[current.elevator].isLegal) yield (elevator: nextFloor, floors: clone, steps: current.steps + 1);
+      }
     for (final (item1, item2) in items.pairs()) {
       final clone = current.floors.clone();
       clone[current.elevator].remove(item1);
       clone[current.elevator].remove(item2);
       clone[nextFloor].add(item1);
       clone[nextFloor].add(item2);
-      yield (elevator: nextFloor, floors: clone, steps: current.steps + 1);
+      if (clone[nextFloor].isLegal && clone[current.elevator].isLegal) yield (elevator: nextFloor, floors: clone, steps: current.steps + 1);
     }
   }
 }

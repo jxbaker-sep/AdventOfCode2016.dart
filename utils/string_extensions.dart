@@ -22,4 +22,8 @@ extension MyStringExtensions on String {
     if (endsWith(snack)) return substring(0, length - snack.length);
     return this;
   }
+
+  String substringOfLength(int start, int length) {
+    return substring(start, start + length);
+  }
 }

@@ -23,6 +23,8 @@ extension MyListExtensions<T> on List<T> {
       }
     }
   }
+
+  List<T> sublistOfLength(int start, int length) => sublist(start, start + length);
 }
 
 extension MyListListExtensions<T> on List<List<T>> {

@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:collection/collection.dart';
 
 extension MyIterableExtensions<T> on Iterable<T> {
@@ -36,18 +38,11 @@ extension MyIterableExtensions<T> on Iterable<T> {
 
   Iterable<List<T>> windows(int length) sync* {
     if (length < 1) throw Exception();
-    List<T> accum = [];
+    final accum = Queue<T>();
     for(final item in this) {
-      if (accum.length == length - 1) {
-        accum.add(item);
-        yield accum;
-      }
-      else if (accum.length == length) {
-        accum = accum.skip(1).followedBy([item]).toList();
-        yield accum;
-      } else {
-        accum.add(item);
-      }
+      accum.add(item);
+      if (accum.length > length) accum.removeFirst();
+      if (accum.length == length) yield accum.toList();
     }
   }
 }

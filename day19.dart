@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'utils/input.dart';
+import 'utils/lle.dart';
 import 'utils/test.dart';
 
 Future<void> main() async {
@@ -48,11 +49,6 @@ int do2(int size) {
   return do2Iterative(size);
 }
 
-final class LLE extends LinkedListEntry<LLE> {
-  int value;
-  LLE(this.value);
-}
-
 int do2Iterative(final int target) {
   int score = 1;
   for(var current = 2; current <= target; current++) {
@@ -72,10 +68,10 @@ int do2BruteForce(List<int> data, int index) {
 }
 
 int do2LL(List<int> inputData) {
-  final ll = LinkedList<LLE>();
+  final ll = LinkedList<LLE<int>>();
   ll.addAll(inputData.map((item) => LLE(item)));
-  LLE cursor = ll.first;
-  LLE? head;
+  var cursor = ll.first;
+  LLE<int>? head;
   while (ll.isNotEmpty) {
     if (ll.length == 1) return ll.first.value;
     if (head == null) {
