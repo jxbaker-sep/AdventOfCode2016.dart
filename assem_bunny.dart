@@ -39,16 +39,19 @@ Registers assemBunnyExecute(Iterable<AssemBunnyInstruction> originalInstructions
     return false;
   }
 
-  while (pc < instructions.length) {
-    if (multiplyOptimize()) continue;
-    final i = instructions[pc];
-    if (i is Tgl) {
-      final index = pc + r[i.destination]!;
+  bool toggle() {
+    if (instructions[pc] case Tgl tgl) {
+      final index = pc + r[tgl.destination]!;
       if (index < instructions.length) instructions[index] = instructions[index].toggle();
       pc += 1;
-    } else {
-      pc += i.execute(r) ?? 1;
     }
+    return false;
+  }
+
+  while (pc < instructions.length) {
+    if (multiplyOptimize()) continue;
+    if (toggle()) continue;
+    pc += instructions[pc].execute(r) ?? 1;
   }
   return r;
 }
