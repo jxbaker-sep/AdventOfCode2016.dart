@@ -25,9 +25,9 @@ Registers assemBunnyExecute(Iterable<AssemBunnyInstruction> originalInstructions
       if (instructions[pc + 0] case CopyInstruction(source: var s0, destination: var d0)) 
       if (instructions[pc + 1] case Inc(increment: var i1, destination: var d1)) 
       if (instructions[pc + 2] case Inc(increment: var i2, destination: var d2) when i2 == -1 && d0 == d2) 
-      if (instructions[pc + 3] case Jnz(condition: var c3, pcShift: var shift3) when shift3.isRight && shift3.right == -2 && c3.isLeft && c3.left == d2) 
+      if (instructions[pc + 3] case Jnz(condition: var c3, pcShift: var shift3) when shift3.fold((_) => false, (r) => r == -2) && c3.fold((l) => l == d2, (_) => false)) 
       if (instructions[pc + 4] case Inc(increment: var i4, destination: var d4) when i4 == -1) 
-      if (instructions[pc + 5] case Jnz(condition: var c5, pcShift: var shift5) when shift5.isRight && shift5.right == -5 && c5.isLeft && c5.left == d4) {
+      if (instructions[pc + 5] case Jnz(condition: var c5, pcShift: var shift5) when shift5.fold((_) => false, (r) => r == -5) && c5.fold((l) => l == d4, (_) => false)) {
         // d0 is same as d2, don't need to set
         r[d1] = r[d1]! + i1 * r[d4]! * r.lookup(s0);
         r[d2] = 0;
