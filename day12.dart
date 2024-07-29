@@ -12,7 +12,7 @@ Future<void> main() async {
       test("Data", () => expect(assemBunnyExecute(data)['a'], equals(318020)));
     });
     group("Part 2", (){
-      test("Data", () => expect(assemBunnyExecute(data, {'a': 0, 'b': 0, 'c': 1, 'd': 0})['a'], equals(9227674)));
+      test("Data", () => expect(assemBunnyExecute(data, {'c': 1})['a'], equals(9227674)));
     });
   });
 }
