@@ -62,6 +62,12 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "either_dart",
+      "rootUri": "file:///home/jxbaker@net.sep.com/.pub-cache/hosted/pub.dev/either_dart-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "file",
       "rootUri": "file:///home/jxbaker@net.sep.com/.pub-cache/hosted/pub.dev/file-7.0.0",
       "packageUri": "lib/",
@@ -314,7 +320,7 @@
       "languageVersion": "3.4"
     }
   ],
-  "generated": "2024-07-22T14:48:45.183726Z",
+  "generated": "2024-07-29T17:12:33.218497Z",
   "generator": "pub",
   "generatorVersion": "3.4.4",
   "pubCache": "file:///home/jxbaker@net.sep.com/.pub-cache"
