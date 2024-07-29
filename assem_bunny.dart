@@ -35,29 +35,6 @@ Registers assemBunnyExecute(Iterable<AssemBunnyInstruction> originalInstructions
         pc += 6;
         return true;
       }
-
-      if (instructions[pc] case Inc(increment : var i, destination: var d) when i == -1) {
-        if (instructions[pc+1] case Inc(increment : var j, destination: var accumulator)) {
-          if (instructions[pc+2] case Jnz(condition: var c, pcShift: var pcShift) when c.isLeft && c.left == d && pcShift.isRight && pcShift.right == -2) {
-            r[accumulator] = r[accumulator]! + j * r[d]!;
-            r[d] = 0;
-            pc += 3;
-            return true;
-          }
-        }
-      }
-    }
-    if (pc < instructions.length - 2) {
-      if (instructions[pc] case Inc(increment : var i, destination: var d) when i == -1) {
-        if (instructions[pc+1] case Inc(increment : var j, destination: var accumulator)) {
-          if (instructions[pc+2] case Jnz(condition: var c, pcShift: var pcShift) when c.isLeft && c.left == d && pcShift.isRight && pcShift.right == -2) {
-            r[accumulator] = r[accumulator]! + j * r[d]!;
-            r[d] = 0;
-            pc += 3;
-            return true;
-          }
-        }
-      }
     }
     return false;
   }
