@@ -44,6 +44,7 @@ Registers assemBunnyExecute(Iterable<AssemBunnyInstruction> originalInstructions
       final index = pc + r[tgl.destination]!;
       if (index < instructions.length) instructions[index] = instructions[index].toggle();
       pc += 1;
+      return true;
     }
     return false;
   }
