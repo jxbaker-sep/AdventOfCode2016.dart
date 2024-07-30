@@ -12,7 +12,10 @@ List<AssemBunnyInstruction> parseAssemBunny(String s) => s.lines().map((m) => ma
 
 typedef Registers = Map<String, int>;
 
-Registers assemBunnyExecute(Iterable<AssemBunnyInstruction> originalInstructions, [Registers? registerMods]) {
+Registers assemBunnyExecute(Iterable<AssemBunnyInstruction> originalInstructions, [Registers? registerMods])
+  => assemBunnyIterate(originalInstructions, registerMods).last;
+
+Iterable<Registers> assemBunnyIterate(Iterable<AssemBunnyInstruction> originalInstructions, [Registers? registerMods]) sync* {
   final instructions = originalInstructions.toList();
   final r = {'a': 0, 'b': 0, 'c': 0, 'd': 0};
   for (final entry in (registerMods ?? {}).entries) {
@@ -29,7 +32,7 @@ Registers assemBunnyExecute(Iterable<AssemBunnyInstruction> originalInstructions
       if (instructions[pc + 4] case Inc(increment: var i4, destination: var d4) when i4 == -1) 
       if (instructions[pc + 5] case Jnz(condition: var c5, pcShift: var shift5) when shift5.fold((_) => false, (r) => r == -5) && c5.fold((l) => l == d4, (_) => false)) {
         // d0 is same as d2, don't need to set
-        r[d1] = r[d1]! + i1 * r[d4]! * r.lookup(s0);
+        r[d1] = r[d1]! + i1 * r[d4]! * r.resolve(s0);
         r[d2] = 0;
         r[d4] = 0;
         pc += 6;
@@ -52,9 +55,11 @@ Registers assemBunnyExecute(Iterable<AssemBunnyInstruction> originalInstructions
   while (pc < instructions.length) {
     if (multiplyOptimize()) continue;
     if (toggle()) continue;
-    pc += instructions[pc].execute(r) ?? 1;
+    final i = instructions[pc];
+    pc += i.execute(r) ?? 1;
+    if (i is Out) yield Map.from(r);
   }
-  return r;
+  yield r;
 }
 
 abstract class AssemBunnyInstruction {
@@ -62,14 +67,14 @@ abstract class AssemBunnyInstruction {
   AssemBunnyInstruction toggle();
 }
 
-typedef RegisterOrInt = Either<String, int>;
+typedef RValue = Either<String, int>;
 
 extension on Registers {
-  int lookup(RegisterOrInt l) => l.fold((x) => this[x]!, (i) => i);
+  int resolve(RValue l) => l.fold((x) => this[x]!, (i) => i);
 }
 
 class NulledCopyInstruction extends AssemBunnyInstruction {
-  final RegisterOrInt source;
+  final RValue source;
   final int destination;
 
   NulledCopyInstruction(this.source, this.destination);
@@ -84,14 +89,14 @@ class NulledCopyInstruction extends AssemBunnyInstruction {
 }
 
 class CopyInstruction extends AssemBunnyInstruction {
-  final RegisterOrInt source;
+  final RValue source;
   final String destination;
 
   CopyInstruction(this.source, this.destination);
   
   @override
   int? execute(Registers r) {
-    r[destination] = r.lookup(source);
+    r[destination] = r.resolve(source);
     return null;
   }
   
@@ -116,14 +121,14 @@ class Inc extends AssemBunnyInstruction {
 }
 
 class Jnz extends AssemBunnyInstruction {
-  final RegisterOrInt condition;
-  final RegisterOrInt pcShift;
+  final RValue condition;
+  final RValue pcShift;
 
   Jnz(this.condition, this.pcShift);
   
   @override
   int? execute(Registers r) {
-    return (r.lookup(condition) != 0) ? r.lookup(pcShift) : null;
+    return (r.resolve(condition) != 0) ? r.resolve(pcShift) : null;
   }
   
   @override
@@ -144,13 +149,31 @@ class Tgl extends AssemBunnyInstruction {
   AssemBunnyInstruction toggle() => Inc(1, destination);
 }
 
-final matcher = [copyLiteralP, copyRegisterP, incP, decP , jnz, tglP].toChoiceParser();
+class Out extends AssemBunnyInstruction {
+  final RValue source;
+
+  Out(this.source);
+  
+  @override
+  int? execute(Registers r) {
+    r["out"] = r.resolve(source);
+    return null;
+  }
+  
+  @override
+  AssemBunnyInstruction toggle() {
+    throw UnimplementedError();
+  }
+}
+
+final matcher = [copyLiteralP, copyRegisterP, incP, decP , jnz, tglP, outP].toChoiceParser();
 final copyLiteralP = seq2(number.before("cpy"), registerP).map((m) => CopyInstruction(Right(m.$1), m.$2));
 final copyRegisterP = seq2(registerP.before("cpy"), registerP).map((m) => CopyInstruction(Left(m.$1), m.$2));
 final incP = registerP.before("inc").map((m) => Inc(1, m));
 final decP = registerP.before("dec").map((m) => Inc(-1, m));
 final tglP = registerP.before("tgl").map((m) => Tgl(m));
-final jnz = seq2(registerOrIntP.before("jnz"), registerOrIntP).map((m) => Jnz(m.$1, m.$2));
+final jnz = seq2(rValueP.before("jnz"), rValueP).map((m) => Jnz(m.$1, m.$2));
+final outP = rValueP.before("out").map((m) => Out(m));
 
 final registerP = oneOf(['a', 'b', 'c', 'd']);
-final registerOrIntP = (registerP | number).map((m) => m is int ? Right<String, int>(m) : Left<String, int>(m as String));
+final rValueP = (registerP | number).map((m) => m is int ? Right<String, int>(m) : Left<String, int>(m as String));
