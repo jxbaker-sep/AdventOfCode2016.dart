@@ -3,7 +3,6 @@ import 'package:collection/collection.dart';
 import 'utils/input.dart';
 import 'utils/iterable_extensions.dart';
 import 'utils/string_extensions.dart';
-import 'utils/position.dart';
 import 'utils/test.dart';
 
 Future<void> main() async {

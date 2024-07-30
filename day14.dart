@@ -5,7 +5,6 @@ import 'package:crypto/crypto.dart';
 import 'package:test/test.dart';
 
 import 'utils/input.dart';
-import 'utils/lle.dart';
 import 'utils/string_extensions.dart';
 import 'utils/xrange.dart';
 
@@ -56,7 +55,7 @@ int do1(String salt, [bool stretch = false]) {
     }
 
     final sentinel = threes.firstOrNull?.index ?? current.index;
-    for (final item in fives.takeWhile((five) => five.index <= sentinel).toList()) {
+    for (final _ in fives.takeWhile((five) => five.index <= sentinel).toList()) {
       // print('Removing five: $item ${threes.first.index}');
       fives.removeFirst();
     }

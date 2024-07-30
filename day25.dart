@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:test/test.dart';
 
 import 'assem_bunny.dart';
