@@ -25,6 +25,8 @@ extension MyListExtensions<T> on List<T> {
   }
 
   List<T> sublistOfLength(int start, int length) => sublist(start, start + length);
+
+  T get flast => this[length - 1];
 }
 
 extension MyListListExtensions<T> on List<List<T>> {

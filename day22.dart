@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 
 import 'utils/input.dart';
 import 'utils/iterable_extensions.dart';
+import 'utils/list_extensions.dart';
 import 'utils/string_extensions.dart';
 import 'utils/position.dart';
 import 'utils/test.dart';
@@ -159,7 +160,7 @@ Iterable<SearchNode> neighbors(SearchNode node) sync* {
     return;
   }
 
-  for(final neighbor in node.shoveList.last.orthogonalNeighbors()
+  for(final neighbor in node.shoveList.flast.orthogonalNeighbors()
     .where((neighbor) => node.grid.contains(neighbor))
     .where((neighbor) => node.dataLocation != neighbor)
     .where((neighbor) => !node.shoveList.contains(neighbor))) {
