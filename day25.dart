@@ -22,10 +22,10 @@ int do1(List<AssemBunnyInstruction> instructions) {
 bool detectClockSignal(int i, List<AssemBunnyInstruction> instructions) {
   final List<Registers> signals = [];
   int expected(int signalNumber) => signalNumber % 2;
-  for (final r in assemBunnyIterate(instructions, {'a': i}).take(0xFFFF)) {
-    if (r['out'] != expected(signals.length)) return false;
+  for (final r in assemBunnyIterate(instructions, {RegisterLabel.a: i}).take(0xFFFF)) {
+    if (r.out != expected(signals.length)) return false;
     for(final other in signals) {
-      if (MapEquality().equals(other, r)) return true;
+      if (other == r) return true;
     }
     signals.add(r);
   }

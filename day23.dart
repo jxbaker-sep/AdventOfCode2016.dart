@@ -9,14 +9,14 @@ Future<void> main() async {
 
   group('Day 23', (){
     group('optimization tests', (){
-      test('5*7', () => expect(assemBunnyExecute(parseAssemBunny(mul0))['a'], equals(35)));
+      test('5*7', () => expect(assemBunnyExecute(parseAssemBunny(mul0)).a, equals(35)));
     });
     group('Part 1', (){
-      test('Sample', () => expect(assemBunnyExecute(sample)['a'], equals(3)));
-      test('Data', () => expect(assemBunnyExecute(data, {'a':7})['a'], equals(12748)));
+      test('Sample', () => expect(assemBunnyExecute(sample).a, equals(3)));
+      test('Data', () => expect(assemBunnyExecute(data, {RegisterLabel.a:7}).a, equals(12748)));
     });
     group('Part 2', (){
-      test('Data', () => expect(assemBunnyExecute(data, {'a':12})['a'], equals(479009308)));
+      test('Data', () => expect(assemBunnyExecute(data, {RegisterLabel.a:12}).a, equals(479009308)));
     });
   });
 }
